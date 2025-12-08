@@ -1,6 +1,6 @@
 package com.docai.document_analyzer.controller;
 
-import com.docai.documentanalyzer.service.DocumentService;
+import com.docai.document_analyzer.service.DocumentService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;

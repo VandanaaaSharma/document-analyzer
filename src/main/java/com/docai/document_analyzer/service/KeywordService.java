@@ -15,7 +15,7 @@ public class KeywordService {
             "that", "it", "with", "as", "by", "be", "are", "was", "were", "from"
     );
 
-    private static final Pattern WORD_PATTERN = Pattern.compile("[a-zA-Z]+")
+    private static final Pattern WORD_PATTERN = Pattern.compile("[a-zA-Z]+");
 
     public List<String> extractKeywords(String text) {
 
