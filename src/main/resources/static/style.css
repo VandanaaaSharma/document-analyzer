@@ -1,0 +1,50 @@
+body {
+    font-family: Arial, sans-serif;
+    background: #f2f4f8;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    width: 450px;
+    margin: 60px auto;
+    padding: 25px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    text-align: center;
+}
+
+.upload-box {
+    margin: 20px 0;
+}
+
+button {
+    margin-top: 15px;
+    padding: 12px 20px;
+    background: #3b82f6;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #2563eb;
+}
+
+.result-box {
+    margin-top: 25px;
+    text-align: left;
+    background: #f8fafc;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.loading {
+    margin-top: 20px;
+    font-size: 18px;
+    color: #3b82f6;
+    font-weight: bold;
+}
+
