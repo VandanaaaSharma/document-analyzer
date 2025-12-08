@@ -1,33 +1,78 @@
-function uploadFile() {
-    const file = document.getElementById("fileInput").files[0];
+let selectedFile = null;
 
-    if (!file) {
+// DARK MODE TOGGLE
+document.getElementById("darkToggle").onclick = () => {
+    document.body.classList.toggle("dark");
+};
+
+// DRAG & DROP LOGIC
+const dropArea = document.getElementById("dropArea");
+
+dropArea.addEventListener("dragover", (e) => {
+    e.preventDefault();
+    dropArea.classList.add("dragover");
+});
+
+dropArea.addEventListener("dragleave", () => {
+    dropArea.classList.remove("dragover");
+});
+
+dropArea.addEventListener("drop", (e) => {
+    e.preventDefault();
+    dropArea.classList.remove("dragover");
+
+    selectedFile = e.dataTransfer.files[0];
+});
+
+// UPLOAD + PROGRESS + API REQUEST
+function uploadFile() {
+    if (!selectedFile) {
+        selectedFile = document.getElementById("fileInput").files[0];
+    }
+    if (!selectedFile) {
         alert("Please select a file");
         return;
     }
 
     const formData = new FormData();
-    formData.append("file", file);
+    formData.append("file", selectedFile);
 
-    document.getElementById("loading").style.display = "block";
-    document.getElementById("result").style.display = "none";
+    // Show progress bar
+    document.getElementById("progressContainer").style.display = "block";
 
-    fetch("http://localhost:8080/api/v1/document/analyze", {
+    let progress = 0;
+    const progressBar = document.getElementById("progressBar");
+    const loading = document.getElementById("loading");
+
+    // Simulate progress animation
+    const interval = setInterval(() => {
+        if (progress < 90) {
+            progress += 10;
+            progressBar.style.width = progress + "%";
+        }
+    }, 200);
+
+    loading.style.display = "block";
+
+    fetch("/api/v1/document/analyze", {
         method: "POST",
         body: formData
     })
         .then(res => res.json())
         .then(data => {
-            document.getElementById("loading").style.display = "none";
-            document.getElementById("result").style.display = "block";
+            clearInterval(interval);
+
+            progressBar.style.width = "100%";
+            loading.style.display = "none";
+
+            document.getElementById("resultBox").classList.remove("hidden");
 
             document.getElementById("summary").textContent = data.summary;
             document.getElementById("keywords").textContent = data.keywords.join(", ");
             document.getElementById("sentiment").textContent = data.sentiment;
         })
         .catch(err => {
-            alert("Error analyzing document");
+            alert("Error analyzing file");
             console.error(err);
         });
 }
-

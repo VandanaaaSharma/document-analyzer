@@ -2,33 +2,46 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Document Analyzer</title>
+    <title>Document Analyzer Dashboard</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <div class="container">
-        <h2>AI Document Analyzer</h2>
+    <header>
+        <h1>📄 AI Document Analyzer</h1>
+        <button id="darkToggle">🌙</button>
+    </header>
 
-        <div class="upload-box">
-            <input type="file" id="fileInput" accept=".pdf,.doc,.docx">
-            <button onclick="uploadFile()">Analyze Document</button>
+    <div class="card glass">
+
+        <h2>Upload Document</h2>
+
+        <!-- Drag & Drop Area -->
+        <div id="dropArea" class="drop-area">
+            <p>Drag & Drop PDF/DOCX here</p>
+            <p class="or">or</p>
+            <input type="file" id="fileInput" accept=".pdf,.docx">
         </div>
 
-        <div id="loading" class="loading" style="display:none;">
-            Analyzing document... please wait.
+        <button class="btn" onclick="uploadFile()">Analyze</button>
+
+        <!-- PROGRESS BAR -->
+        <div id="progressContainer" class="progress-container">
+            <div id="progressBar" class="progress-bar"></div>
         </div>
 
-        <div id="result" class="result-box" style="display:none;">
-            <h3>Analysis Result</h3>
+        <!-- Loading Animation -->
+        <div id="loading" class="loading">⏳ Analyzing document...</div>
 
-            <p><strong>Summary:</strong></p>
+        <!-- Result Box -->
+        <div id="resultBox" class="result-box hidden">
+            <h3>Summary</h3>
             <p id="summary"></p>
 
-            <p><strong>Keywords:</strong></p>
+            <h3>Keywords</h3>
             <p id="keywords"></p>
 
-            <p><strong>Sentiment:</strong></p>
+            <h3>Sentiment</h3>
             <p id="sentiment"></p>
         </div>
     </div>
@@ -36,4 +49,3 @@
 <script src="script.js"></script>
 </body>
 </html>
-

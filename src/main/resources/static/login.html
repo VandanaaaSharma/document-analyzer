@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login - AI Document Analyzer</title>
+
+    <!-- Internal CSS -->
+    <style>
+        /* Global reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-gradient: radial-gradient(circle at top, #3b82f6 0, #0f172a 45%, #020617 100%);
+            --card-bg: rgba(15, 23, 42, 0.82);
+            --accent: #38bdf8;
+            --accent-soft: rgba(56, 189, 248, 0.2);
+            --text-main: #e5e7eb;
+            --text-muted: #9ca3af;
+            --danger: #f97373;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background: var(--bg-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-main);
+            overflow: hidden;
+        }
+
+        /* Subtle animated background orbs */
+        .orb {
+            position: fixed;
+            border-radius: 999px;
+            filter: blur(60px);
+            opacity: 0.4;
+            z-index: -1;
+            animation: float 16s ease-in-out infinite alternate;
+        }
+
+        .orb.one {
+            width: 260px;
+            height: 260px;
+            background: #38bdf8;
+            top: -60px;
+            left: -40px;
+        }
+
+        .orb.two {
+            width: 320px;
+            height: 320px;
+            background: #a855f7;
+            bottom: -80px;
+            right: -40px;
+            animation-duration: 22s;
+        }
+
+        @keyframes float {
+            0%   { transform: translateY(0) translateX(0);   }
+            100% { transform: translateY(30px) translateX(40px); }
+        }
+
+        /* Main card */
+        .card {
+            width: 360px;
+            padding: 28px 26px 30px;
+            border-radius: 20px;
+            background: var(--card-bg);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(148, 163, 184, 0.45);
+            backdrop-filter: blur(18px);
+            position: relative;
+        }
+
+        /* Gradient glow ring behind card */
+        .card::before {
+            content: "";
+            position: absolute;
+            inset: -1px;
+            border-radius: inherit;
+            padding: 1px;
+            background: linear-gradient(
+                135deg,
+                rgba(56, 189, 248, 0.8),
+                rgba(129, 140, 248, 0.8),
+                rgba(236, 72, 153, 0.8)
+            );
+            -webkit-mask: 
+                linear-gradient(#000 0 0) content-box, 
+                linear-gradient(#000 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            opacity: 0.25;
+        }
+
+        /* Header / logo */
+        .logo-circle {
+            width: 52px;
+            height: 52px;
+            border-radius: 16px;
+            background: radial-gradient(circle at 30% 20%, #e0f2fe, #0ea5e9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 14px;
+            box-shadow: 0 10px 30px rgba(56, 189, 248, 0.6);
+        }
+
+        .logo-icon {
+            font-size: 26px;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            margin-bottom: 4px;
+        }
+
+        .subtitle {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 24px;
+        }
+
+        .subtitle span {
+            color: var(--accent);
+        }
+
+        /* Inputs */
+        .input-group {
+            margin-bottom: 14px;
+            text-align: left;
+        }
+
+        .input-label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+        }
+
+        .input {
+            width: 100%;
+            padding: 10px 11px;
+            border-radius: 10px;
+            border: 1px solid rgba(148, 163, 184, 0.4);
+            background: rgba(15, 23, 42, 0.85);
+            color: var(--text-main);
+            font-size: 0.9rem;
+            outline: none;
+            transition: border 0.2s, box-shadow 0.2s, background 0.2s;
+        }
+
+        .input::placeholder {
+            color: #6b7280;
+        }
+
+        .input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.6);
+            background: rgba(15, 23, 42, 0.95);
+        }
+
+        .helper-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 4px 0 14px;
+            font-size: 0.76rem;
+            color: var(--text-muted);
+        }
+
+        .remember {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+        }
+
+        .remember input {
+            width: 14px;
+            height: 14px;
+        }
+
+        .link {
+            color: var(--accent);
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .link:hover {
+            text-decoration: underline;
+        }
+
+        /* Button */
+        .btn {
+            width: 100%;
+            margin-top: 4px;
+            padding: 11px 16px;
+            background: linear-gradient(135deg, #38bdf8, #6366f1);
+            border: none;
+            border-radius: 999px;
+            color: white;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            box-shadow: 0 10px 25px rgba(79, 70, 229, 0.55);
+            transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            filter: brightness(1.05);
+            box-shadow: 0 14px 32px rgba(79, 70, 229, 0.75);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+            box-shadow: 0 8px 18px rgba(79, 70, 229, 0.6);
+        }
+
+        .btn-icon {
+            font-size: 1.1rem;
+        }
+
+        /* Error / footer text */
+        .error {
+            margin-top: 10px;
+            font-size: 0.8rem;
+            color: var(--danger);
+            min-height: 16px;
+        }
+
+        .footnote {
+            margin-top: 14px;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-align: center;
+        }
+
+        .footnote span {
+            color: var(--accent);
+        }
+
+        /* Small badge for “AI Document Analyzer” */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.7rem;
+            padding: 4px 8px;
+            border-radius: 999px;
+            background: var(--accent-soft);
+            color: var(--accent);
+            margin-bottom: 10px;
+        }
+
+        .badge-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 999px;
+            background: #22c55e;
+            box-shadow: 0 0 0 4px rgba(34,197,94,0.25);
+        }
+    </style>
+</head>
+<body>
+
+<!-- Background orbs -->
+<div class="orb one"></div>
+<div class="orb two"></div>
+
+<div class="card">
+    <div class="logo-circle">
+        <span class="logo-icon">🧠</span>
+    </div>
+
+    <div class="badge">
+        <span class="badge-dot"></span>
+        AI Document Analyzer
+    </div>
+
+    <h2>Welcome back</h2>
+    <p class="subtitle">
+        Sign in to access your <span>AI-powered</span> document summaries, insights & sentiment.
+    </p>
+
+    <div class="input-group">
+        <div class="input-label">Workspace ID</div>
+        <input type="text" id="workspace" class="input" placeholder="e.g. legal-team, hr-suite">
+    </div>
+
+    <div class="input-group">
+        <div class="input-label">Username</div>
+        <input type="text" id="username" class="input" placeholder="Enter your username">
+    </div>
+
+    <div class="input-group">
+        <div class="input-label">Password</div>
+        <input type="password" id="password" class="input" placeholder="Enter your password">
+    </div>
+
+    <div class="helper-row">
+        <label class="remember">
+            <input type="checkbox" id="rememberMe">
+            <span>Remember me</span>
+        </label>
+        <a class="link">Forgot password?</a>
+    </div>
+
+    <button class="btn" onclick="login()">
+        <span class="btn-icon">➡️</span>
+        <span>Login to Analyzer</span>
+    </button>
+
+    <p id="loginError" class="error"></p>
+
+    <p class="footnote">
+        Secure access to AI summaries, keyword extraction & sentiment for your <span>documents</span>.
+    </p>
+</div>
+
+<!-- Simple inline JS for demo login -->
+<script>
+    function login() {
+        const user = document.getElementById("username").value.trim();
+        const pass = document.getElementById("password").value.trim();
+        const workspace = document.getElementById("workspace").value.trim();
+        const errorEl = document.getElementById("loginError");
+
+        if (!workspace || !user || !pass) {
+            errorEl.textContent = "Please fill in all fields to continue.";
+            return;
+        }
+
+        // Demo logic: replace with real authentication (Spring Security/JWT) later
+        if (user === "admin" && pass === "admin123") {
+            errorEl.textContent = "";
+            // Redirect to dashboard (index.html)
+            window.location.href = "index.html";
+        } else {
+            errorEl.textContent = "Invalid credentials. Try admin / admin123 for demo.";
+        }
+    }
+</script>
+</body>
+</html>
