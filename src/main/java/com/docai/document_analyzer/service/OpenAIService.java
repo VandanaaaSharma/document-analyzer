@@ -23,13 +23,16 @@ public class OpenAIService {
         JSONObject json = new JSONObject();
         json.put("model", "gpt-4.1-mini");
 
+        // Force JSON output
+        json.put("response_format", new JSONObject().put("type", "json_object"));
+
         JSONArray messages = new JSONArray();
         messages.put(new JSONObject()
                 .put("role", "user")
                 .put("content",
-                        "Analyze this text and return STRICT JSON like this:\n" +
+                        "Analyze this text and return JSON with EXACT structure:\n" +
                                 "{ \"summary\": \"...\", \"keywords\": [\"...\"], \"sentiment\": \"...\" }\n\n" +
-                                "TEXT:\n" + text)
+                                "Text:\n" + text)
         );
 
         json.put("messages", messages);
@@ -43,13 +46,14 @@ public class OpenAIService {
         Response response = client.newCall(request).execute();
         String result = response.body().string();
 
+        // Extract GPT message
         String content = new JSONObject(result)
                 .getJSONArray("choices")
                 .getJSONObject(0)
                 .getJSONObject("message")
                 .getString("content");
 
-        // Parse the JSON returned by the model
+        // Now ALWAYS valid JSON because response_format forces it
         JSONObject ai = new JSONObject(content);
 
         return new AnalysisResponse(
