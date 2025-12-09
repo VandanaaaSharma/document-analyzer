@@ -1,5 +1,6 @@
 package com.docai.document_analyzer.controller;
 
+import com.docai.document_analyzer.model.AnalysisResponse;
 import com.docai.document_analyzer.service.DocumentService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,12 +17,14 @@ public class DocumentController {
     }
 
     @PostMapping("/analyze")
-    public ResponseEntity<?> analyze(@RequestParam("file") MultipartFile file) {
-        try {
-            String result = service.analyzeDocument(file);
-            return ResponseEntity.ok(result);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+public ResponseEntity<?> analyze(@RequestParam("file") MultipartFile file) {
+    try {
+        AnalysisResponse response = service.analyzeDocument(file);
+        return ResponseEntity.ok(response);
+    } catch (Exception e) {
+        e.printStackTrace();
+        return ResponseEntity.status(500).body("Error: " + e.getMessage());
     }
+}
+
 }
