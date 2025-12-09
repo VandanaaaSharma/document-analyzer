@@ -2,7 +2,6 @@ package com.docai.document_analyzer.util;
 
 import org.apache.tika.Tika;
 import org.springframework.stereotype.Component;
-
 import java.io.InputStream;
 
 @Component

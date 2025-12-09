@@ -6,15 +6,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import java.util.List;
 
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
+@Data @Builder @NoArgsConstructor @AllArgsConstructor
 public class AnalysisResponse {
+
     private String summary;
     private List<String> keywords;
     private String sentiment;
     private String fileName;
     private long fileSize;
-    private String documentText; // 👈 ADD THIS
+    private String documentText;
 }

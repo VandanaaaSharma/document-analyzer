@@ -29,13 +29,14 @@ public class DocumentService {
         } else if (filename.toLowerCase().endsWith(".docx")) {
             text = docxUtil.extractText(file.getInputStream());
         } else {
-            throw new IllegalArgumentException("Only PDF and DOCX supported");
+            throw new IllegalArgumentException("Only PDF/DOCX supported.");
         }
 
-        AnalysisResponse result = openAIService.generateAnalysis(text);
-        result.setFileName(filename);
-        result.setFileSize(file.getSize());
+        AnalysisResponse res = openAIService.generateAnalysis(text);
+        res.setFileName(filename);
+        res.setFileSize(file.getSize());
+        res.setDocumentText(text);
 
-        return result;
+        return res;
     }
 }

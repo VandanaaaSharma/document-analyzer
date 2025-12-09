@@ -1,4 +1,3 @@
-// ChatRequest.java
 package com.docai.document_analyzer.model;
 
 import lombok.Data;
@@ -10,4 +9,3 @@ public class ChatRequest {
     private String question;
     private List<ChatMessage> history;
 }
-
