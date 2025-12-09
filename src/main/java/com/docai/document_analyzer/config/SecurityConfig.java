@@ -14,15 +14,10 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login.html", "/style.css", "/index.html", "/script.js").permitAll()
-                        .anyRequest().authenticated()
+                        .anyRequest().permitAll()   // ALLOW ALL REQUESTS
                 )
-                .formLogin(login -> login
-                        .loginPage("/login.html")
-                        .defaultSuccessUrl("/index.html", true)
-                        .failureUrl("/login.html?error=true")
-                        .permitAll()
-                );
+                .formLogin(form -> form.disable())  // Disable Spring login
+                .httpBasic(basic -> basic.disable()); // Disable basic auth
 
         return http.build();
     }
