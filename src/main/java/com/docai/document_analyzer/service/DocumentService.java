@@ -1,5 +1,6 @@
 package com.docai.document_analyzer.service;
 
+import com.docai.document_analyzer.model.AnalysisResponse;
 import com.docai.document_analyzer.util.PdfUtil;
 import com.docai.document_analyzer.util.DocxUtil;
 import org.springframework.stereotype.Service;
@@ -18,19 +19,23 @@ public class DocumentService {
         this.openAIService = openAIService;
     }
 
-    public String analyzeDocument(MultipartFile file) throws Exception {
-        String filename = file.getOriginalFilename().toLowerCase();
+    public AnalysisResponse analyzeDocument(MultipartFile file) throws Exception {
+
+        String filename = file.getOriginalFilename();
         String text;
 
-        if (filename.endsWith(".pdf")) {
+        if (filename.toLowerCase().endsWith(".pdf")) {
             text = pdfUtil.extractText(file.getInputStream());
-        } else if (filename.endsWith(".docx")) {
+        } else if (filename.toLowerCase().endsWith(".docx")) {
             text = docxUtil.extractText(file.getInputStream());
         } else {
             throw new IllegalArgumentException("Only PDF and DOCX supported");
         }
 
-        return openAIService.generateAnalysis(text);
+        AnalysisResponse result = openAIService.generateAnalysis(text);
+        result.setFileName(filename);
+        result.setFileSize(file.getSize());
+
+        return result;
     }
 }
-
