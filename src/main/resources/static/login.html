@@ -5,190 +5,202 @@
     <title>Login - AI Document Analyzer</title>
 
     <style>
+        /* ---------------- RESET ---------------- */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            font-family: "Inter", system-ui, sans-serif;
         }
 
         :root {
-            --bg-gradient: radial-gradient(circle at top, #3b82f6 0, #0f172a 45%, #020617 100%);
-            --card-bg: rgba(15, 23, 42, 0.82);
+            --glass-bg: rgba(255, 255, 255, 0.07);
+            --border-glow: rgba(56, 189, 248, 0.4);
             --accent: #38bdf8;
-            --accent-soft: rgba(56, 189, 248, 0.2);
-            --text-main: #e5e7eb;
-            --text-muted: #9ca3af;
-            --danger: #f97373;
+            --accent2: #6366f1;
+            --danger: #ef4444;
+            --text: #e2e8f0;
+            --muted: #94a3b8;
         }
 
+        /* ---------------- BACKGROUND ---------------- */
         body {
-            min-height: 100vh;
-            font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
-            background: var(--bg-gradient);
+            height: 100vh;
+            background: radial-gradient(circle at top, #3b82f6 0, #0f172a 45%, #020617 100%);
             display: flex;
             align-items: center;
             justify-content: center;
-            color: var(--text-main);
+            color: var(--text);
             overflow: hidden;
             position: relative;
         }
 
-        /* Background Orbs (Fixed Bug: pointer-events disabled) */
+        /* Floating glowing orbs */
         .orb {
-            position: fixed;
-            border-radius: 999px;
-            filter: blur(60px);
-            opacity: 0.4;
-            z-index: -2;
-            pointer-events: none;
-            animation: float 16s ease-in-out infinite alternate;
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.55;
+            animation: float 12s infinite ease-in-out alternate;
+            z-index: -1;
         }
-
-        .orb.one {
-            width: 260px;
-            height: 260px;
-            background: #38bdf8;
-            top: -60px;
-            left: -40px;
-        }
-
-        .orb.two {
-            width: 320px;
-            height: 320px;
-            background: #a855f7;
-            bottom: -80px;
-            right: -40px;
-            animation-duration: 22s;
-        }
+        .orb.one { width: 300px; height: 300px; background: #38bdf8; top: -50px; left: -50px; }
+        .orb.two { width: 360px; height: 360px; background: #a855f7; bottom: -80px; right: -60px; animation-duration: 18s; }
 
         @keyframes float {
-            0% { transform: translateY(0) translateX(0); }
-            100% { transform: translateY(30px) translateX(40px); }
+            0% { transform: translate(0px, 0px); }
+            100% { transform: translate(40px, 50px); }
         }
 
-        /* Card */
+        /* ---------------- GLASS CARD ---------------- */
         .card {
-            width: 360px;
-            padding: 28px;
+            width: 380px;
+            padding: 32px;
             border-radius: 20px;
-            background: var(--card-bg);
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
-            border: 1px solid rgba(148, 163, 184, 0.45);
+            background: var(--glass-bg);
+            box-shadow: 0 0 50px rgba(0,0,0,0.35);
+            border: 1px solid rgba(255,255,255,0.2);
             backdrop-filter: blur(18px);
             position: relative;
-            z-index: 5;
+            animation: fadeIn 1s ease;
         }
 
-        /* Logo */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0px); }
+        }
+
+        /* Card Glow Border */
+        .card::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: 20px;
+            padding: 1px;
+            background: linear-gradient(135deg, #38bdf8, #6366f1, #ec4899);
+            -webkit-mask: 
+                linear-gradient(#000 0 0) content-box, 
+                linear-gradient(#000 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            opacity: 0.25;
+        }
+
+        /* ---------------- HEADER UI ---------------- */
         .logo-circle {
-            width: 52px;
-            height: 52px;
-            border-radius: 16px;
-            background: radial-gradient(circle at 30% 20%, #e0f2fe, #0ea5e9);
+            width: 60px;
+            height: 60px;
+            margin: auto;
+            margin-bottom: 12px;
+            background: radial-gradient(circle at 25% 25%, #e0f2fe, #0284c7);
+            border-radius: 18px;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 14px;
+            box-shadow: 0 10px 30px rgba(56, 189, 248, 0.6);
         }
 
-        .logo-icon {
-            font-size: 26px;
+        .logo-circle span {
+            font-size: 30px;
         }
 
-        h2 {
-            margin-bottom: 6px;
+        .title {
+            text-align: center;
+            font-size: 1.6rem;
+            margin-bottom: 4px;
         }
 
         .subtitle {
+            text-align: center;
             font-size: 0.85rem;
-            color: var(--text-muted);
+            color: var(--muted);
             margin-bottom: 20px;
         }
 
-        /* Input fields */
+        /* ---------------- INPUT FIELDS ---------------- */
         .input-group {
-            margin-bottom: 16px;
+            margin-bottom: 18px;
         }
 
         .input-label {
             font-size: 0.8rem;
-            color: var(--text-muted);
             margin-bottom: 6px;
+            color: var(--muted);
         }
 
         .input {
             width: 100%;
-            padding: 10px;
-            border-radius: 10px;
-            border: 1px solid rgba(148, 163, 184, 0.4);
-            background: rgba(15, 23, 42, 0.85);
-            color: var(--text-main);
-            font-size: 0.9rem;
+            padding: 12px;
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.25);
+            border-radius: 12px;
+            color: var(--text);
+            font-size: 0.95rem;
             outline: none;
+            transition: 0.3s;
         }
 
         .input:focus {
             border-color: var(--accent);
-            box-shadow: 0 0 0 1px rgba(56,189,248,0.5);
+            box-shadow: 0 0 7px var(--accent);
+            background: rgba(255,255,255,0.15);
         }
 
-        /* Button */
+        /* ---------------- BUTTON ---------------- */
         .btn {
             width: 100%;
-            padding: 12px;
-            border-radius: 999px;
+            padding: 14px;
+            margin-top: 6px;
             border: none;
+            border-radius: 999px;
             background: linear-gradient(135deg, #38bdf8, #6366f1);
             color: white;
-            font-size: 0.95rem;
+            font-size: 1rem;
+            font-weight: 600;
             cursor: pointer;
+            transition: 0.3s;
         }
 
         .btn:hover {
-            filter: brightness(1.1);
+            transform: translateY(-2px);
+            filter: brightness(1.15);
+            box-shadow: 0 6px 25px rgba(99,102,241,0.45);
         }
 
+        /* ---------------- ERROR MESSAGE ---------------- */
         .error {
             margin-top: 12px;
-            font-size: 0.85rem;
+            text-align: center;
+            font-size: 0.9rem;
             color: var(--danger);
-            min-height: 18px;
-        }
-
-        .badge {
-            font-size: 0.75rem;
-            color: var(--accent);
-            background: var(--accent-soft);
-            padding: 4px 10px;
-            border-radius: 999px;
-            display: inline-flex;
-            margin-bottom: 8px;
+            min-height: 20px;
         }
     </style>
 </head>
 
 <body>
 
+<!-- Background Effects -->
 <div class="orb one"></div>
 <div class="orb two"></div>
 
+<!-- Login Card -->
 <div class="card">
+
     <div class="logo-circle">
-        <span class="logo-icon">🧠</span>
+        <span>🧠</span>
     </div>
 
-    <div class="badge">AI Document Analyzer</div>
-
-    <h2>Welcome back</h2>
-    <p class="subtitle">Sign in to access your AI-powered document insights.</p>
+    <h2 class="title">Welcome Back</h2>
+    <p class="subtitle">Login to access your AI document workspace</p>
 
     <div class="input-group">
-        <div class="input-label">Username</div>
+        <label class="input-label">Username</label>
         <input type="text" id="username" class="input" placeholder="Enter username">
     </div>
 
     <div class="input-group">
-        <div class="input-label">Password</div>
+        <label class="input-label">Password</label>
         <input type="password" id="password" class="input" placeholder="Enter password">
     </div>
 
@@ -198,23 +210,23 @@
 </div>
 
 <script>
-    function login() {
-        const user = document.getElementById("username").value.trim();
-        const pass = document.getElementById("password").value.trim();
-        const error = document.getElementById("loginError");
+function login() {
+    const user = document.getElementById("username").value.trim();
+    const pass = document.getElementById("password").value.trim();
+    const error = document.getElementById("loginError");
 
-        if (!user || !pass) {
-            error.textContent = "Please fill in all fields.";
-            return;
-        }
-
-        if (user === "admin" && pass === "admin123") {
-            error.textContent = "";
-            window.location.href = "index.html";
-        } else {
-            error.textContent = "Invalid login!";
-        }
+    if (!user || !pass) {
+        error.textContent = "⚠ Please fill in all fields.";
+        return;
     }
+
+    if (user === "admin" && pass === "admin123") {
+        error.textContent = "";
+        window.location.href = "index.html";
+    } else {
+        error.textContent = "❌ Invalid username or password.";
+    }
+}
 </script>
 
 </body>
