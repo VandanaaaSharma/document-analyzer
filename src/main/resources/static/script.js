@@ -2,16 +2,15 @@ let selectedFile = null;
 let documentText = "";
 let chatHistory = [];
 
-// NAVIGATION
+
 function goHistory() { window.location.href = "history.html"; }
 function logout() { localStorage.removeItem("currentUser"); window.location.href = "login.html"; }
 
-// Enable Analyze button when file selected
 function enableAnalyzeButton() {
     document.getElementById("analyzeBtn").disabled = false;
 }
 
-// Show file name
+
 function showFileName() {
     const fileInput = document.getElementById("fileInput");
     const label = document.getElementById("fileNameLabel");
@@ -23,7 +22,7 @@ function showFileName() {
     }
 }
 
-// DRAG & DROP
+
 const dropArea = document.getElementById("dropArea");
 
 dropArea.addEventListener("dragover", e => {
@@ -43,7 +42,7 @@ dropArea.addEventListener("drop", e => {
     enableAnalyzeButton();
 });
 
-// ANALYZE DOCUMENT
+
 function uploadFile() {
 
     if (!selectedFile) {
